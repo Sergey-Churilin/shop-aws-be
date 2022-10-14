@@ -2,11 +2,14 @@ service: product-service
 
 frameworkVersion: '3'
 
+useDotenv: true
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: eu-west-1
+  environment:
+    TABLE_NAME: ${env:TABLE_NAME}
   httpApi:
     cors: true
 
@@ -20,6 +23,13 @@ custom:
     includeModules: true
 
 functions:
+  createProduct:
+    handler: handler.createProduct
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
   getProductsList:
     handler: handler.getProductsList
     events:

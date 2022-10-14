@@ -1,11 +1,19 @@
-'use strict';
-import { productsList } from '../productsList.js';
-import { headers } from '../utils/headers.js';
+"use strict";
+import AWS from "aws-sdk";
+import { headers } from "../utils/headers.js";
 
-export const getProductById = async event => {
+const dynamo = new AWS.DynamoDB.DocumentClient();
+const query = async (id) => {
+    const result = await dynamo
+        .query({ TableName: process.env.TABLE_NAME, KeyConditionExpression: "id = :id", ExpressionAttributeValues: { ":id": id } })
+        .promise();
+    return result.Items[0];
+};
+
+export const getProductById = async (event) => {
     try {
         const { productId } = event.pathParameters;
-        const product = productsList.find(p => p.id === productId);
+        const product = await query(productId);
         if (product) {
             return {
                 statusCode: 200,
@@ -15,14 +23,14 @@ export const getProductById = async event => {
         } else {
             return {
                 statusCode: 404,
-                body: 'Product not found',
+                body: "Product not found",
                 headers
             };
         }
     } catch (e) {
         return {
             statusCode: 500,
-            body: 'Server error',
+            body: "Server get one error"
         };
     }
 };
