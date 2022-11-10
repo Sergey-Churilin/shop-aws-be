@@ -26,7 +26,8 @@ const importProductsFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
     const params = {
         Bucket: BUCKET_NAME,
         Key: filePath,
-        Expires: 60
+        Expires: 60,
+        ContentType: "text/csv"
     };
 
     try {
