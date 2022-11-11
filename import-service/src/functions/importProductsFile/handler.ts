@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const importProductsFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+    const { REGION = "", UPLOADED_FOLDER = "", BUCKET_NAME = "" } = process.env;
     const fileName = event.queryStringParameters?.name;
     if (!fileName) {
         return formatJSONResponse(
@@ -17,13 +18,13 @@ const importProductsFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
             400
         );
     }
-    const filePath = `uploaded/${fileName}`;
+    const filePath = `${UPLOADED_FOLDER}/${fileName}`;
     const s3 = new AWS.S3({
         signatureVersion: "v4",
-        region: "eu-west-1"
+        region: REGION
     });
     const params = {
-        Bucket: process.env.BUCKET_NAME,
+        Bucket: BUCKET_NAME,
         Key: filePath,
         Expires: 60
     };

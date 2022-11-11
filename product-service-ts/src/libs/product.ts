@@ -11,3 +11,8 @@ export type ProductSchema = {
 };
 
 export type Product = Omit<Stock, "product_id"> & ProductSchema;
+
+export type ProductRequest = Omit<Product, "id"> & {
+    price: string;
+    count: string;
+};

@@ -11,7 +11,7 @@ export default {
                 event: "s3:ObjectCreated:*",
                 rules: [
                     {
-                        prefix: "uploaded/"
+                        prefix: `${process.env.UPLOADED_FOLDER}/`
                     }
                 ],
                 existing: true

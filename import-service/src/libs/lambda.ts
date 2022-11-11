@@ -2,9 +2,9 @@ import middy from "@middy/core";
 import middyJsonBodyParser from "@middy/http-json-body-parser";
 
 export const middyfy = (handler, useBodyParser: boolean = true) => {
+    let middyResponse = middy(handler);
     if (useBodyParser) {
-        return middy(handler).use(middyJsonBodyParser());
-    } else {
-        return middy(handler);
+        middyResponse = middyResponse.use(middyJsonBodyParser());
     }
+    return middyResponse;
 };
